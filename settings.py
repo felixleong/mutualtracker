@@ -90,9 +90,15 @@ INSTALLED_APPS = (
     'django.contrib.sessions',
     'django.contrib.sites',
     'django.contrib.messages',
-    # Uncomment the next line to enable the admin:
+
     'django.contrib.admin',
-    # Uncomment the next line to enable admin documentation:
-    # 'django.contrib.admindocs',
+    'django.contrib.admindocs',
+
+    'google_analytics',
     'fundtracking',
 )
+
+# Settings for my own development environment
+if DEBUG:
+    MEDIA_URL = 'http://felixleong.loc:8000/site_media/'
+    MEDIA_ROOT = '/Users/felix/Projects/MutualTracker/static'

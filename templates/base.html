@@ -1,0 +1,49 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <title>Public Mutual Tracker: {% block title %}{% endblock %}</title>
+  <link rel="stylesheet" href="{{ MEDIA_URL }}/css/screen.css" type="text/css" media="screen,projection" charset="utf-8">
+  <link rel="stylesheet" href="{{ MEDIA_URL }}/css/print.css" type="text/css" media="print" charset="utf-8">
+  <!--[if IE]><link rel="stylesheet" href="{{ MEDIA_URL }}/css/ie.css" type="text/css" media="screen,projection" charset="utf-8"><![endif]-->
+  <link rel="stylesheet" href="{{ MEDIA_URL }}/css/style.css" type="text/css" media="screen,projection" charset="utf-8">
+  {% block head_scripts %}{% endblock %}
+</head>
+<body>
+  <div id="container" class="container">
+    <!-- Extra white space to allow the container extends to the top -->
+    <div id="header" class="span-24">&nbsp;
+      <h1><a href="{% url fundtracking.views.index %}">Public Mutual Tracker</a></h1>
+    </div>
+
+    <div id="nav">
+      <ul>
+        <li><a href="{% url fundtracking.views.index %}">Home</a></li>
+        <li><a href="#">API</a></li>
+        <li><a href="http://pbmutualtracker.uservoice.com/">Send Feedback</a></li>
+      </ul>
+    </div>
+
+    <div id="content" class="span-24">
+      {# TODO: Put up a session flash message block here #}
+      {% block content %}{% endblock %}
+    </div>
+
+    <div id="footer" class="span-24">
+      <ul>
+        <li>&copy; Seh Hui "Felix" Leong</li>
+        <li><a href="{% url fundtracking.views.index %}">Home</a></li>
+        <li><a href="#">API</a></li>
+        <li><a href="http://pbmutualtracker.uservoice.com/">Send Feedback</a></li>
+      </ul>
+      <p class="disclaimer">
+	Disclaimer: This site is not affiliated to Public Mutual Bhd and
+	Public Bank Bhd. For investment advice, please ask your unit trust
+	consultant… and, unfortunately, I'm not one ☺.
+      </p>
+    </div>
+  </div>
+  {% if settings.DEBUG %}Testing this out{% endif %}
+</body>
+{% block end_of_page_scripts %}{% endblock %}
+</html>

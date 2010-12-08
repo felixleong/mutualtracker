@@ -1,0 +1,202 @@
+/*======================================
+      WELCOME TO THE STYLESHEET
+--------------------------------------
+     Copyright Mike Crittenden
+      Author: Mike Crittenden
+======================================*/
+
+/**************************************\
+|------------COLOR SCHEME--------------|
+|--------------------------------------|
+- black		#000
+- white		#fff
+\**************************************/
+
+
+/**************************************/
+/*              GLOBALS               */
+/**************************************/
+html, body {
+    margin: 0;
+    padding: 0;
+}
+h1, h2, h3, h4, h5, h6 { color: #811; }
+
+/**************************************/
+/*              HEADER                */
+/**************************************/
+#header h1 { font-size: 3em; }
+#header h1 a {
+    color: #c33;
+    text-decoration: none;
+}
+
+
+/**************************************/
+/*             NAVIGATION             */
+/*------------------------------------*/
+/* NOTE: Due to similarities, some    */
+/*       rules are shared with        */
+/*       #footer                      */
+/**************************************/
+#nav ul {
+    background: #d44;
+    color: #ffe;
+    list-style: none;
+    margin: 0;
+    padding: 0.75em;
+    position: absolute;
+    right: 0;
+    top: 0;
+}
+#nav ul li, #footer ul li {
+    float: left;
+    margin: 0;
+    padding: 0 0.65em;
+    text-align: center;
+}
+#nav a { color: #ffe; }
+#nav a:visited { color: #ddc; }
+#nav a[href^="http:"], #footer a[href^="http:"] {
+    background-image: none;
+    padding-right: 0;
+}
+
+.prev-page {
+    margin: 0.75em 0;
+}
+
+/**************************************/
+/*            MAIN CONTENT            */
+/**************************************/
+#container { position: relative; }
+
+thead, th {
+    background: #d44;
+    color: #ffe;
+    font-size: 105%;
+    line-height: 133%;
+}
+tr.altrow {
+    background: #ffd;
+}
+
+/* Flot specific styles */
+div.legend table {
+    border: 1px solid #ccc;
+}
+div.legend table td {
+    border: none;
+    font-size: 1.2em;
+}
+
+/* funds/index specific styles */
+#fund-index-table { margin-bottom: 0.5em; }
+div.sparkline {
+    height: 2.2em;
+    margin: 0 auto;
+    width: 6.5em;
+}
+
+/* funds/view specific styles */
+#price-chart { height: 355px; }
+#price-overview { height: 95px; }
+div.legend .price-legend-date {
+    font-weight: bold;
+    color: #f00;
+}
+#price-history table { width: 100%; }
+#price-history table td, #price-history table th {
+    padding: 0;
+    text-align: center;
+}
+#latest-price-col .price {
+    font-weight: bold;
+    font-size: 350%;
+    line-height: 100%;
+}
+#latest-price-col .date {
+    color: #777;
+    font-style: italic;
+}
+#latest-price-col .label,
+#day-change-col .label,
+#info-col .label
+{
+    font-weight: bold;
+    text-align: center;
+    border-bottom: 1px solid #000;
+    margin-bottom: 0.5em;
+}
+#day-change-col .change-pct {
+    font-size: 200%;
+    line-height: 100%
+}
+.chg-lose { color: #e00; }
+.chg-unchanged { color: #000; }
+.chg-gain { color: #0c2; }
+#info-col table { width: 100%; }
+#info-col td, #info-col th {
+    padding: 0 0.5em;
+    vertical-align: center;
+}
+#info-col th {
+    background: #e55;
+    text-align: right;
+    width: 40%;
+}
+
+/**************************************/
+/*               FOOTER               */
+/**************************************/
+#footer {
+    color: #aaa;
+    margin-top: 2.4em;
+}
+#footer ul {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+.disclaimer {
+    clear: left;
+    font-style: italic;
+    margin: 1em 0;
+}
+/**************************************/
+/*            COMPONENTS              *
+/**************************************/
+/* DataTables */
+.dataTables_info { float: left; }
+.dataTables_paginate { float: right; }
+.dataTables_filter {
+    background: #fdb;
+    font-weight: bold;
+    margin-bottom: 0.2em;
+    padding: 0.5em;
+    -moz-border-radius: 6px;
+    -webkit-border-radius: 6px;
+}
+.dataTables_filter input {
+    font-weight: normal;
+    margin-left: 0.2em;
+    background: #fff url(../img/find.png) no-repeat right center;
+}
+
+/* DataTables Pagination */
+.paginate_disabled_previous, .paginate_enabled_previous, .paginate_disabled_next, .paginate_enabled_next {
+	height: 19px;
+	width: 19px;
+	margin-left: 3px;
+	float: left;
+}
+.paginate_disabled_previous { background-image: url('../img/back_disabled.jpg'); }
+.paginate_enabled_previous { background-image: url('../img/back_enabled.jpg'); }
+.paginate_disabled_next { background-image: url('../img/forward_disabled.jpg'); }
+.paginate_enabled_next { background-image: url('../img/forward_enabled.jpg'); }
+/* DataTables Sorting */
+.sorting_asc { background: url('../img/sort_asc.png') no-repeat center right; }
+.sorting_desc { background: url('../img/sort_desc.png') no-repeat center right; }
+.sorting { background: url('../img/sort_both.png') no-repeat center right; } 
+.sorting_asc_disabled { background: url('../img/sort_asc_disabled.png') no-repeat center right; } 
+.sorting_desc_disabled { background: url('../img/sort_desc_disabled.png') no-repeat center right; }
