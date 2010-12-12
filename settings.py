@@ -73,6 +73,7 @@ MIDDLEWARE_CLASSES = (
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
+    'django.contrib.flatpages.middleware.FlatpageFallbackMiddleware',
 )
 
 ROOT_URLCONF = 'MutualTracker.urls'
@@ -90,6 +91,7 @@ INSTALLED_APPS = (
     'django.contrib.sessions',
     'django.contrib.sites',
     'django.contrib.messages',
+    'django.contrib.flatpages',
 
     'django.contrib.admin',
     'django.contrib.admindocs',
@@ -98,7 +100,14 @@ INSTALLED_APPS = (
     'fundtracking',
 )
 
+# Additional setting from other apps
+GOOGLE_ANALYTICS_MODEL = True
+
 # Settings for my own development environment
 if DEBUG:
     MEDIA_URL = 'http://felixleong.loc:8000/site_media/'
     MEDIA_ROOT = '/Users/felix/Projects/MutualTracker/static'
+    INTERNAL_IPS = (
+        '192.168.0.*',
+        '127.0.0.1',
+    )
