@@ -1,0 +1,92 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ fund.name }}{% endblock %}
+
+{% block head_scripts %}
+<!--[if IE]><script src="{{ MEDIA_URL }}js/flot/excanvas.js" type="text/javascript" charset="utf-8"></script><![endif]-->
+<script src="{{ MEDIA_URL }}js/flot/jquery.min.js" type="text/javascript" charset="utf-8"></script>
+<script src="{{ MEDIA_URL }}js/flot/jquery.flot.js" type="text/javascript" charset="utf-8"></script>
+<script src="{{ MEDIA_URL }}js/jquery.dataTables.js" type="text/javascript" charset="utf-8"></script>
+<script src="{{ MEDIA_URL }}js/pbmutual.lib.js" type="text/javascript" charset="utf-8"></script>
+<script src="{{ MEDIA_URL }}js/funds/view.js" type="text/javascript" charset="utf-8"></script>
+<script type="text/javascript" charset="utf-8">
+  var chartData = [
+{% for price in fund.last_52_week_price_set %}[{{ price.date|date:'U' }}000, {{ price.nav|floatformat:4 }}]{% if not forloop.last %},{% endif %}{% endfor %}
+  ];
+  var overviewData = [
+{% for price in price_overview %}[{{ price.date|date:'U' }}000, {{ price.nav|floatformat:4 }}]{% if not forloop.last %},{% endif %}{% endfor %}
+  ];
+var fundCode = "{{ fund.code }}";
+</script>
+{% endblock %}
+
+{% block content %}
+<div class="funds view">
+  <h2>{{ fund.name }} ({{fund.code}})</h2>
+
+  <!-- Fund information panel (top) -->
+  <div id="fund-info" class="span-15">
+    <!-- Latest price -->
+    <div id="latest-price-col" class="span-4 center">
+      <div class="label">NAV</div>
+      <div class="price">{{ fund.current_day_price.nav }}</div>
+      <div class="date">as of {{ fund.current_day_price.date|date:"j M Y" }}</div>
+    </div>
+
+    <!-- Change -->
+    <div id="day-change-col" class="span-4 center">
+      <div class="label">Day change</div>
+      <div class="
+          {% if price_difference > 0 %}chg-gain
+          {% else %}{% if price_difference < 0 %}chg-lose
+          {% else %}chg-unchanged
+          {% endif %}{% endif %}">
+          <div class="change-pct">{{ price_difference_percentage|floatformat:2 }}%</div>
+          <div class="change-value">{{ price_difference|floatformat:4 }}</div>
+      </div>
+    </div>
+
+    <!-- Extra information -->
+    <div id="info-col" class="span-7 last">
+      <div class="label">Information</div>
+      <table>
+        <tbody>
+          <tr>
+            <th>52-week range</th>
+            <td>{{ last_52_week_min_price }} - {{ last_52_week_max_price }}</td>
+          </tr>
+          <tr>
+            <th>Volatility</td>
+            <td>{{ volatility|floatformat:2 }}%</td>
+          </tbody>
+        </table>
+      </div>
+      <div class="prev-page span-15 last">
+        <a href="{% url fundtracking.views.index %}">Back to funds</a>
+      </div>
+    </div>
+
+    <!-- Price history -->
+    <div id="price-history" class="span-9 last">
+      <table cellpadding = "0" cellspacing = "0">
+        <thead>
+          <tr>
+            <th>Date</th>
+            <th>NAV</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for price in price_history_5_days %}
+          <tr class="{% cycle '' 'altrow' %}">
+            <td>{{ price.date|date:'SHORT_DATE_FORMAT' }}</td>
+            <td>{{ price.nav|floatformat:4 }}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Charts -->
+    <div id="price-chart" class="span-24">200-days Price chart. Please enable Javascript to view the chart</div>
+    <div id="price-overview" class="span-24">Overall price overview. Please enable Javascript to view the chart</div>
+{% endblock %}

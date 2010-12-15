@@ -11,6 +11,14 @@ class Fund(models.Model):
         return self.name
 
     @property
+    def current_day_price(self):
+        return self.price_set.all()[0]
+
+    @property
+    def previous_day_price(self):
+        return self.price_set.all()[1]
+
+    @property
     def latest_15_day_price_set(self):
         return self.price_set.all()[:15]
 
@@ -31,6 +39,7 @@ class Fund(models.Model):
     @property
     def last_52_week_floor_price(self):
         return self.last_52_week_price_set.aggregate(Min('nav'))['nav__min']
+
 
 class Price(models.Model):
     class Meta:
