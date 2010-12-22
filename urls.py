@@ -7,6 +7,7 @@ admin.autodiscover()
 
 urlpatterns = patterns('',
     (r'^funds/', include('fundtracking.urls')),
+    (r'^api/', include('api.urls')),
 
     # Admin site
     (r'^admin/', include(admin.site.urls)),

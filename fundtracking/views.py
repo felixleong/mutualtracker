@@ -12,18 +12,13 @@ def index(request):
     fund_list = Fund.objects.all().order_by('code')
     return render_to_response('fundtracking/index.html', {'fund_list': fund_list}, context_instance = RequestContext(request))
 
-def view(request, fund_id):
+def view(request, fund_id=None, code=None):
     """Get a detailed view of the requested fund"""
-    fund = get_object_or_404(Fund, pk=fund_id)
-    return _view(request, fund)
+    if fund_id:
+        fund = get_object_or_404(Fund, pk=fund_id)
+    else:
+        fund = get_object_or_404(Fund, code=code)
 
-def view_by_code(request, code):
-    """Get a detailed view of the requested fund"""
-    fund = get_object_or_404(Fund, code=code)
-    return _view(request, fund)
-
-# Pumbling codes
-def _view(request, fund):
     current_price = fund.price_set.all()[0]
     previous_price = fund.price_set.all()[1]
     price_difference = current_price.nav - previous_price.nav
