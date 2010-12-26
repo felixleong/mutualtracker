@@ -1,4 +1,4 @@
-from fundtracking.models import Fund, Price, Report, Company, Industry, Country
+from mutualtracker.fundtracking.models import Fund, Price, Report, Company, Industry, Country
 from django.contrib import admin
 
 admin.site.register(Fund)

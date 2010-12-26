@@ -5,7 +5,7 @@ Description: Routing information for fund pages
 '''
 from django.conf.urls.defaults import *
 
-urlpatterns = patterns('fundtracking.views',
+urlpatterns = patterns('mutualtracker.fundtracking.views',
     (r'^$', 'index'),
     (r'^index$', 'index'),
     (r'^view/(?P<fund_id>\d+)$', 'view'),

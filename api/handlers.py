@@ -2,7 +2,7 @@ from datetime import datetime
 from django.shortcuts import get_object_or_404
 from piston.handler import BaseHandler
 from piston.utils import rc
-from fundtracking.models import Fund, Price
+from mutualtracker.fundtracking.models import Fund, Price
 
 ISO8601_DATE_FORMAT='%Y-%m-%d'
 
@@ -74,5 +74,7 @@ class PriceHandler(BaseHandler):
             base = base.filter(date__gte=since)
         if until:
             base = base.filter(date__lte=until)
+
+        # Return the data to the user
         return base.all()[:count]
 

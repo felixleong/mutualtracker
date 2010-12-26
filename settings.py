@@ -4,19 +4,19 @@ DEBUG = True
 TEMPLATE_DEBUG = DEBUG
 
 ADMINS = (
-    # ('Your Name', 'your_email@domain.com'),
+    ('Seh Hui "Felix" Leong', 'felixleong@gmail.com'),
 )
 
 MANAGERS = ADMINS
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.mysql', # Add 'postgresql_psycopg2', 'postgresql', 'mysql', 'sqlite3' or 'oracle'.
-        'NAME': 'felix_pbtrack',                      # Or path to database file if using sqlite3.
-        'USER': 'felix',                      # Not used with sqlite3.
-        'PASSWORD': 'mL#7:O>',                  # Not used with sqlite3.
-        'HOST': '',                      # Set to empty string for localhost. Not used with sqlite3.
-        'PORT': '',                      # Set to empty string for default. Not used with sqlite3.
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'p375r083_pbtrack',
+        'USER': 'p375r083_pbtrack',
+        'PASSWORD': 'mL#7:O>',
+        'HOST': '',
+        'PORT': '',
     }
 }
 
@@ -76,13 +76,10 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.flatpages.middleware.FlatpageFallbackMiddleware',
 )
 
-ROOT_URLCONF = 'MutualTracker.urls'
+ROOT_URLCONF = 'mutualtracker.urls'
 
 TEMPLATE_DIRS = (
-    # Put strings here, like "/home/html/django_templates" or "C:/www/django/templates".
-    # Always use forward slashes, even on Windows.
-    # Don't forget to use absolute paths, not relative paths.
-    '/Users/felix/Projects/MutualTracker/templates',
+    '/Users/felix/Projects/mutualtracker/templates',
 )
 
 INSTALLED_APPS = (
@@ -97,7 +94,7 @@ INSTALLED_APPS = (
     'django.contrib.admindocs',
 
     'google_analytics',
-    'fundtracking',
+    'mutualtracker.fundtracking',
 )
 
 # Additional setting from other apps
@@ -105,9 +102,22 @@ GOOGLE_ANALYTICS_MODEL = True
 
 # Settings for my own development environment
 if DEBUG:
-    MEDIA_URL = 'http://felixleong.loc:8000/site_media/'
-    MEDIA_ROOT = '/Users/felix/Projects/MutualTracker/static'
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.mysql', # Add 'postgresql_psycopg2', 'postgresql', 'mysql', 'sqlite3' or 'oracle'.
+            'NAME': 'felix_pbtrack',                      # Or path to database file if using sqlite3.
+            'USER': 'felix',                      # Not used with sqlite3.
+            'PASSWORD': 'mL#7:O>',                  # Not used with sqlite3.
+            'HOST': '',                      # Set to empty string for localhost. Not used with sqlite3.
+            'PORT': '',                      # Set to empty string for default. Not used with sqlite3.
+        }
+    }
     INTERNAL_IPS = (
         '192.168.0.*',
         '127.0.0.1',
+    )
+    MEDIA_URL = 'http://felixleong.loc:8000/site_media/'
+    MEDIA_ROOT = '/Users/felix/Projects/MutualTracker/static'
+    TEMPLATE_DIRS = (
+        '/Users/felix/Projects/mutualtracker/templates',
     )

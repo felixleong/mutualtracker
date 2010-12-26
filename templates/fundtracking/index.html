@@ -36,8 +36,8 @@ var fundPrices = [
 <tbody>
 {% for fund in fund_list %}
 <tr class="{% cycle '' 'altrow' %}">
-  <td><a href="{% url fundtracking.views.view fund.id %}">{{ fund.code }}</a></td>
-  <td><a href="{% url fundtracking.views.view fund.id %}">{{ fund.name }}</a></td>
+  <td><a href="{% url mutualtracker.fundtracking.views.view fund.id %}">{{ fund.code }}</a></td>
+  <td><a href="{% url mutualtracker.fundtracking.views.view fund.id %}">{{ fund.name }}</a></td>
   <td class="center">{{ fund.price_set.all.0.date }}</td>
   <td class="center">{{ fund.price_set.all.0.nav }}</td>
   <td class="center">{{ fund.last_52_week_floor_price }} - {{ fund.last_52_week_ceiling_price }}</td>

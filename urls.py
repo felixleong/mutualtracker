@@ -6,7 +6,7 @@ from django.contrib import admin
 admin.autodiscover()
 
 urlpatterns = patterns('',
-    (r'^funds/', include('fundtracking.urls')),
+    (r'^funds/', include('mutualtracker.fundtracking.urls')),
     (r'^api/', include('api.urls')),
 
     # Admin site

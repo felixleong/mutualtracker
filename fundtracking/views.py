@@ -5,7 +5,7 @@ Description: Views for fund tracking page
 '''
 from django.template import RequestContext
 from django.shortcuts import render_to_response, get_object_or_404
-from fundtracking.models import Fund, Price
+from mutualtracker.fundtracking.models import Fund, Price
 
 def index(request):
     """Retrieve a fund listing"""
