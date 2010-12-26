@@ -5,7 +5,7 @@ Description: Routing information for fund pages
 '''
 from django.conf.urls.defaults import *
 from piston.resource import Resource
-from api.handlers import FundHandler, PriceHandler
+from mutualtracker.api.handlers import FundHandler, PriceHandler
 
 fund_handler = Resource(FundHandler)
 price_handler = Resource(PriceHandler)

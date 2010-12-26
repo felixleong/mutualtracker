@@ -7,7 +7,7 @@ admin.autodiscover()
 
 urlpatterns = patterns('',
     (r'^funds/', include('mutualtracker.fundtracking.urls')),
-    (r'^api/', include('api.urls')),
+    (r'^api/', include('mutualtracker.api.urls')),
 
     # Admin site
     (r'^admin/', include(admin.site.urls)),
