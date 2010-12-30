@@ -66,7 +66,7 @@ class PriceHandler(BaseHandler):
             fund = get_object_or_404(Fund, pk=fund_id)
             base = fund.price_set
         elif fund_code:
-            fund = get_object_or_404(Fund, code=code)
+            fund = get_object_or_404(Fund, code=fund_code)
             base = fund.price_set
 
         # Add the filters when necessary
