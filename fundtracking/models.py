@@ -12,24 +12,41 @@ class Fund(models.Model):
 
     @property
     def current_day_price(self):
-        return self.price_set.all()[0]
+        price_set = self.price_set.all()
+        if price_set:
+            return price_set[0]
+        else:
+            return None
 
     @property
     def previous_day_price(self):
-        return self.price_set.all()[1]
+        price_set = self.price_set.all()
+        if price_set and price_set.count() >= 2:
+            return price_set[1]
+        else:
+            return None
 
     @property
     def latest_15_day_price_set(self):
-        return self.price_set.all()[:15]
+        price_set = self.price_set.all()
+        if price_set:
+            return price_set[:15]
+        else:
+            return []
 
     @property
     def last_52_week_price_set(self):
         try:
             self._last_52_week_price_set
         except AttributeError:
-            until_date = self.price_set.all()[0].date
-            from_date = until_date - timedelta(52*7)
-            self._last_52_week_price_set = self.price_set.filter(date__gt=from_date, date__lte=until_date)
+            current_day_price = self.current_day_price
+            if current_day_price:
+                until_date = current_day_price.date
+                from_date = until_date - timedelta(52*7)
+                self._last_52_week_price_set = self.price_set.filter(date__gt=from_date, date__lte=until_date)
+            else:
+                self._last_52_week_price_set = []
+
         return self._last_52_week_price_set
 
     @property
