@@ -6,6 +6,7 @@ from django.contrib import admin
 admin.autodiscover()
 
 urlpatterns = patterns('',
+    url(r'^$', 'mutualtracker.fundtracking.views.index', name='root'),
     (r'^funds/', include('mutualtracker.fundtracking.urls')),
     (r'^api/', include('mutualtracker.api.urls')),
 

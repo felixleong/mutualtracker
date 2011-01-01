@@ -50,7 +50,7 @@ MEDIA_ROOT = '/home/p375r083/mutualtracker/static/'
 # URL that handles the media served from MEDIA_ROOT. Make sure to use a
 # trailing slash if there is a path component (optional in other cases).
 # Examples: "http://media.lawrence.com", "http://example.com/media/"
-MEDIA_URL = 'http://media.mutualtracker.com'
+MEDIA_URL = 'http://media.mutualtracker.com/'
 
 # URL prefix for admin media -- CSS, JavaScript and images. Make sure to use a
 # trailing slash.
