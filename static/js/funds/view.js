@@ -52,8 +52,7 @@ PriceChart = function(chartElem, overviewElem) {
     this._chartData = null;
     this._updatingChart = false;
     this._previousSelection = null;
-    this._priceHistoryUrl = '/prices/history';
-//    this._priceHistoryUrl = '/~felix/PBTracker/prices/history';
+    this._priceHistoryUrl = '/api/prices/history';
 
     // Bind neccessary events
     this._createLoadingOverlay();
@@ -103,7 +102,7 @@ $.extend(PriceChart.prototype, {
     {
 	var newLegend = this._hoverLegend;
 	newLegend = newLegend.replace(/00 Month 0000/, toShortDate(date));
-	newLegend = newLegend.replace(/:.*/, ': ' + nav.toFixed(4));
+	newLegend = newLegend.replace(/:.*/, ': ' + nav);
 
 	this._legendLabelElem.html(newLegend);
     },
@@ -142,24 +141,21 @@ $.extend(PriceChart.prototype, {
 	    since: toISO8601DateString(from),
 	    until: toISO8601DateString(to)
 	};
-	var toDate = parseDate(toISO8601DateString(to));
+	var fromDate = parseDate(toISO8601DateString(from));
 	var self = this;
 	$.getJSON(
-	    this._priceHistoryUrl + '/' + fundCode +
-		generateCakePhpUrlParameters(params) + '.json',
-	    {},
+	    this._priceHistoryUrl + '/' + fundCode + '.json',
+	    params,
 	    function(data) {
 		if(data.length > 0) {
-		    var firstDate = parseDate(data[0].date);
-		    var dataArray = [];
 		    $.each(data, function(key, elem) {
-			dataArray.push([ parseDate(elem.date), elem.nav ]);
+			self._chartData.push([ parseDate(elem.date), elem.nav ]);
 		    });
-		    self._chartData = dataArray.concat(self._chartData);
 		}
 
-		if(firstDate < toDate) {
-		    self._fetchData(firstDate + 86400000, toDate, callback);
+                var lastDate = parseDate(data[data.length - 1].date);
+		if(lastDate > fromDate) {
+		    self._fetchData(fromDate, lastDate - 86400000, callback);
 		} else {
 		    callback();
 		    self._updatingChart = false;
@@ -237,8 +233,7 @@ $.extend(PriceChart.prototype, {
 	var offset = this._chartElem.offset();
 	this._overlay = $('<div class="overlay"></div>')
 	    .css({
-		background: '#fff url(/img/ajax-loader.gif) no-repeat center center',
-//                background: '#fff url(/~felix/PBTracker/img/ajax-loader.gif) no-repeat center center',
+		background: '#fff url(' + PBMutual.MEDIA_URL + 'img/ajax-loader.gif) no-repeat center center',
 		'height': this._chartElem.height(),
 		left: offset.left,
 		position: 'absolute',
