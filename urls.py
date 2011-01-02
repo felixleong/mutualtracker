@@ -5,6 +5,8 @@ from django.conf import settings
 from django.contrib import admin
 admin.autodiscover()
 
+handler500 = 'mutualtracker.views.server_error'
+
 urlpatterns = patterns('',
     url(r'^$', 'mutualtracker.fundtracking.views.index', name='root'),
     (r'^funds/', include('mutualtracker.fundtracking.urls')),
@@ -19,4 +21,5 @@ urlpatterns = patterns('',
 if settings.DEBUG:
     urlpatterns += patterns('',
         (r'^site_media/(?P<path>.*)$', 'django.views.static.serve', {'document_root': settings.MEDIA_ROOT, 'show_indexes': True}),
+        (r'^500/', 'mutualtracker.views.server_error'),
     )
