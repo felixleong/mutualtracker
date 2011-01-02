@@ -1,0 +1,11 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ fund.name }}{% endblock %}
+
+{% block content %}
+<div class="funds view">
+  <h2>{{ fund.name }} ({{fund.code}})</h2>
+  <p>Congratulation! You discovered a newly launched fund! :) No data available yet though…</p>
+  <p><a href="{% url mutualtracker.fundtracking.views.index %}">Back to funds</a></p>
+</div>
+{% endblock %}

@@ -58,7 +58,7 @@ var fundCode = "{{ fund.code }}";
         <tbody>
           <tr>
             <th>52-week range</th>
-            <td>{{ last_52_week_min_price }} - {{ last_52_week_max_price }}</td>
+            <td>{{ last_52_week_min_price|floatformat:4 }} - {{ last_52_week_max_price|floatformat:4 }}</td>
           </tr>
           <tr>
             <th>Volatility</td>

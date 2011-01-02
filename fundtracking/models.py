@@ -51,11 +51,17 @@ class Fund(models.Model):
 
     @property
     def last_52_week_ceiling_price(self):
-        return self.last_52_week_price_set.aggregate(Max('nav'))['nav__max']
+        if self.last_52_week_price_set:
+            return self.last_52_week_price_set.aggregate(Max('nav'))['nav__max']
+        else:
+            return 0.0000
 
     @property
     def last_52_week_floor_price(self):
-        return self.last_52_week_price_set.aggregate(Min('nav'))['nav__min']
+        if self.last_52_week_price_set:
+            return self.last_52_week_price_set.aggregate(Min('nav'))['nav__min']
+        else:
+            return 0.0000
 
 
 class Price(models.Model):

@@ -19,14 +19,24 @@ def view(request, fund_id=None, code=None):
     else:
         fund = get_object_or_404(Fund, code=code)
 
-    current_price = fund.price_set.all()[0]
-    previous_price = fund.price_set.all()[1]
-    price_difference = current_price.nav - previous_price.nav
-    price_difference_percentage = price_difference / previous_price.nav * 100
+    current_price = fund.current_day_price
+    previous_price = fund.previous_day_price
+    if current_price and previous_price:
+        price_difference = current_price.nav - previous_price.nav
+        price_difference_percentage = price_difference / previous_price.nav * 100
+    elif current_price:
+        price_difference = 0
+        price_difference_percentage = 0
+    else:
+        # If we encountered a fund with no price listing yet, show a placeholder page
+        return render_to_response('fundtracking/view_empty.html', {'fund': fund}, context_instance = RequestContext(request))
 
     last_52_week_max_price = fund.last_52_week_ceiling_price
     last_52_week_min_price = fund.last_52_week_floor_price
-    volatility = (last_52_week_max_price - last_52_week_min_price) / last_52_week_min_price * 100
+    if last_52_week_max_price and last_52_week_min_price:
+        volatility = (last_52_week_max_price - last_52_week_min_price) / last_52_week_min_price * 100
+    else:
+        volatility = 0.00
 
     data = {
         'fund': fund,
