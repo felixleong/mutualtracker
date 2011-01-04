@@ -98,6 +98,7 @@ INSTALLED_APPS = (
 
     'google_analytics',
     'mutualtracker.fundtracking',
+    'mutualtracker.reporttracking',
 )
 
 # Additional setting from other apps

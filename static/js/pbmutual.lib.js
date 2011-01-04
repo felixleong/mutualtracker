@@ -15,6 +15,3 @@ function toISO8601DateString(ms) {
     return d.getFullYear() + "-" + (d.getMonth() + 1) + "-" + d.getDate();
 }
 
-// CONSTANTS
-var PBMutual = {};
-PBMutual.MEDIA_URL = "http://felixleong.loc:8000/site_media/"
