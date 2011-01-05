@@ -26,22 +26,24 @@ class Company(models.Model):
     def __unicode__(self):
         return self.name
 
-REPORT_TYPE_CHOICES = (
-    (0, 'Invalid'),
-    (1, 'Annual'),
-    (2, 'Interim'),
-)
-REPORT_STATE_CHOICES = (
-    (0, 'Null'),
-    (1, 'Downloaded'),
-    (2, 'Parsed'),
-)
-DEFAULT_UPLOAD_DIR = 'Reports'
 class Report(models.Model):
+    REPORT_TYPE_CHOICES = (
+        (0, 'Invalid'),
+        (1, 'Annual'),
+        (2, 'Interim'),
+    )
+    REPORT_STATE_CHOICES = (
+        (0, 'Null'),
+        (1, 'Downloaded'),
+        (2, 'Parsed'),
+    )
+    def get_upload_path(self, filename):
+        return 'Reports/{0}/{1}'.format(self.fund.code, filename)
+
     fund = models.ForeignKey(Fund)
     date = models.DateField()
     type = models.SmallIntegerField(choices=REPORT_TYPE_CHOICES)
-    file_name = models.FileField(upload_to=DEFAULT_UPLOAD_DIR, max_length=255)
+    file_name = models.FileField(upload_to=get_upload_path, max_length=255)
     state = models.SmallIntegerField(choices=REPORT_STATE_CHOICES)
     holdings = models.ManyToManyField(Company, through='Holding')
     def __unicode__(self):

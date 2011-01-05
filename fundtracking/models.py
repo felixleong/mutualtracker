@@ -32,7 +32,7 @@ class Fund(models.Model):
         if price_set:
             return price_set[:15]
         else:
-            return []
+            return Price.objects.none()
 
     @property
     def last_52_week_price_set(self):
@@ -45,7 +45,7 @@ class Fund(models.Model):
                 from_date = until_date - timedelta(52*7)
                 self._last_52_week_price_set = self.price_set.filter(date__gt=from_date, date__lte=until_date)
             else:
-                self._last_52_week_price_set = []
+                self._last_52_week_price_set = Price.objects.none()
 
         return self._last_52_week_price_set
 
