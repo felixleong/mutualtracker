@@ -30,6 +30,7 @@ class Command(NoArgsCommand):
                         if not Report.objects.filter(fund__code=fund.code, date=report_meta.date, type=report_meta.type):
                             self.stdout.write('!! Downloading report: date={0}\n'.format(report_meta.date))
                             report_file = downloader.getReport(fund.code, index)
+                            self.stdout.write('!! Download completed!\n')
                             if not report_file:
                                 raise CommandError("Couldn't download the file for fund %s, %s", fund.code, report.date.strftime('%Y-%m-%d'))
 

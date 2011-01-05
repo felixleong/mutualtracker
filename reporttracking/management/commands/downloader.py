@@ -126,10 +126,11 @@ class PBMutualReportDownloader():
         if filename_match:
             filename = filename_match.group('filename')
             self._logger.info('Downloading report: %s', filename)
+            file_content = response.read()
 
             return {
                 'filename': filename,
-                'file_content': ContentFile(respone.read()),
+                'file_content': ContentFile(file_content),
             }
         else:
             self._logger.error('Cannot detect filename, content-disposition=%s', content_disposition)
