@@ -77,6 +77,9 @@ MIDDLEWARE_CLASSES = (
     'django.middleware.cache.CacheMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.contrib.flatpages.middleware.FlatpageFallbackMiddleware',
+
+    # Custom middleware
+    'debug_toolbar.middleware.DebugToolbarMiddleware',
 )
 
 ROOT_URLCONF = 'mutualtracker.urls'
@@ -93,10 +96,15 @@ INSTALLED_APPS = (
     'django.contrib.messages',
     'django.contrib.flatpages',
 
+    # Admin pages
     'django.contrib.admin',
     'django.contrib.admindocs',
 
+    # Custom apps
     'google_analytics',
+    'debug_toolbar',
+
+    # Lastly... my own apps
     'mutualtracker.fundtracking',
     'mutualtracker.reporttracking',
 )

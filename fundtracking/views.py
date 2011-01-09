@@ -3,13 +3,22 @@ File: views.py
 Author: Seh Hui "Felix" Leong
 Description: Views for fund tracking page
 '''
+from datetime import timedelta
 from django.template import RequestContext
 from django.shortcuts import render_to_response, get_object_or_404
 from mutualtracker.fundtracking.models import Fund, Price
 
 def index(request):
     """Retrieve a fund listing"""
-    fund_list = Fund.objects.all().order_by('code')
+    fund_list = Fund.objects.order_by('code')
+    for fund in fund_list:
+        latest_price = fund.latest_price
+        if latest_price:
+            fund.latest_update = latest_price.date
+            fund.latest_nav = latest_price.nav
+            min_max = fund.get_last_52_week_min_max_price_until(fund.latest_update)
+            fund.min_nav = min_max['nav__min']
+            fund.max_nav = min_max['nav__max']
     return render_to_response('fundtracking/index.html', {'fund_list': fund_list}, context_instance = RequestContext(request))
 
 def view(request, fund_id=None, code=None):
@@ -19,35 +28,21 @@ def view(request, fund_id=None, code=None):
     else:
         fund = get_object_or_404(Fund, code=code)
 
-    current_price = fund.current_day_price
-    previous_price = fund.previous_day_price
-    if current_price and previous_price:
-        price_difference = current_price.nav - previous_price.nav
-        price_difference_percentage = price_difference / previous_price.nav * 100
-    elif current_price:
-        price_difference = 0
-        price_difference_percentage = 0
-    else:
+    fund.last_5_day_price_set = fund.price_set.all()[0:5]
+    if fund.last_5_day_price_set.count() < 2:
         # If we encountered a fund with no price listing yet, show a placeholder page
         return render_to_response('fundtracking/view_empty.html', {'fund': fund}, context_instance = RequestContext(request))
 
-    last_52_week_max_price = fund.last_52_week_ceiling_price
-    last_52_week_min_price = fund.last_52_week_floor_price
-    if last_52_week_max_price and last_52_week_min_price:
-        volatility = (last_52_week_max_price - last_52_week_min_price) / last_52_week_min_price * 100
-    else:
-        volatility = 0.00
+    fund.current_price = fund.last_5_day_price_set[0]
+    fund.previous_price = fund.last_5_day_price_set[1]
+    fund.price_difference = fund.current_price.nav - fund.previous_price.nav
+    fund.price_difference_percentage = fund.price_difference / fund.previous_price.nav * 100
 
-    data = {
-        'fund': fund,
-        'price_overview': fund.price_set.all()[::10],
-        'current_price': current_price,
-        'previous_price': previous_price,
-        'price_difference': price_difference,
-        'price_difference_percentage': price_difference_percentage,
-        'last_52_week_max_price': last_52_week_max_price,
-        'last_52_week_min_price': last_52_week_min_price,
-        'volatility': volatility,
-        'price_history_5_days': fund.price_set.all()[0:5],
-    }
-    return render_to_response('fundtracking/view.html', data, context_instance = RequestContext(request))
+    min_max = fund.get_last_52_week_min_max_price_until(fund.current_price.date)
+    fund.min_nav = min_max['nav__min']
+    fund.max_nav = min_max['nav__max']
+    fund.volatility = (fund.max_nav - fund.min_nav) / fund.min_nav * 100
+    fund.last_52_week_price_set = fund.get_last_52_week_price_set_until(fund.current_price.date)
+    fund.price_overview = fund.price_set.filter(date__gte=fund.current_price.date - timedelta(365.25 * 8))[::10]
+
+    return render_to_response('fundtracking/view.html', {'fund': fund}, context_instance = RequestContext(request))

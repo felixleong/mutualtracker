@@ -38,9 +38,9 @@ var fundPrices = [
 <tr class="{% cycle '' 'altrow' %}">
   <td><a href="{% url mutualtracker.fundtracking.views.view fund.id %}">{{ fund.code }}</a></td>
   <td><a href="{% url mutualtracker.fundtracking.views.view fund.id %}">{{ fund.name }}</a></td>
-  <td class="center">{{ fund.current_day_price.date }}</td>
-  <td class="center">{{ fund.current_day_price.nav }}</td>
-  <td class="center">{% if fund.last_52_week_price_set %}{{ fund.last_52_week_floor_price }} - {{ fund.last_52_week_ceiling_price }}{% endif %}</td>
+  <td class="center">{{ fund.latest_update|date:"j M Y" }}</td>
+  <td class="center">{{ fund.latest_nav }}</td>
+  <td class="center">{{ fund.min_nav }} - {{ fund.max_nav }}</td>
   <td class="center"><div class="sparkline"></div></td>
 </tr>
 {% endfor %}
