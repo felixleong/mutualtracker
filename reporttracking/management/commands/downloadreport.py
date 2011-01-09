@@ -27,7 +27,7 @@ class Command(NoArgsCommand):
 
                         self.stderr.write('-- index: {0}: '.format(index))
                         # If the report does not exist in the database, download a copy
-                        if not Report.objects.filter(fund__code=fund.code, date=report_meta.date, type=report_meta.type):
+                        if not Report.objects.filter(fund__code=fund.code, date=report_meta.date, type=report_meta.type).exists():
                             self.stdout.write('!! Downloading report: date={0}\n'.format(report_meta.date))
                             report_file = downloader.getReport(fund.code, index)
                             self.stdout.write('!! Download completed!\n')

@@ -6,8 +6,8 @@ class FundAdmin(admin.ModelAdmin):
 
 class PriceAdmin(admin.ModelAdmin):
     list_display = ('fund', 'date', 'nav',)
-    list_filter = ['date', ]
-    search_fields = ['fund__code', 'fund__name']
+    list_filter = ('date', )
+    search_fields = ('fund__code', 'fund__name')
 
 # Add the admin modules
 admin.site.register(Fund, FundAdmin)
