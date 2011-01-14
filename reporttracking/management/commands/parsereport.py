@@ -32,7 +32,7 @@ class Command(BaseCommand):
                 data = self.parser.parse(textfile)
                 try:
                     datachecker.check(data)
-                    self._commitData(data, report)
+                    self._commitData(data, report, commit)
                 except Exception, exc:
                     raise CommandError('Data checking failed, last line:\n{0}'.format(exc))
 
@@ -81,6 +81,8 @@ class Command(BaseCommand):
                 self.stdout.write(' +-- (!!) Create company: [{1}] {0}\n'.format(line.name, current_country.name))
                 self.stdout.write('      * with industries: {0}\n'.format(','.join([ x.name for x in current_industries ])))
                 company = Company(name=line.name, country=current_country)
+                if commit:
+                    company.save()
 
             if commit:
                 # Attach any potential new industries to the company, just in case
