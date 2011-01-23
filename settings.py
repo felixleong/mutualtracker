@@ -115,7 +115,7 @@ GOOGLE_ANALYTICS_MODEL = True
 
 CACHES = {
     'default': {
-        'BACKEND': 'django.core.cache.backends.dummy.FileBasedCache',
+        'BACKEND': 'django.core.cache.backends.filebased.FileBasedCache',
         'LOCATION': '/tmp/b2QPydaCgf6gP9GAfE4c',
     }
 }
@@ -141,6 +141,12 @@ if DEBUG:
     TEMPLATE_DIRS = (
         '/Users/felix/Projects/mutualtracker/templates',
     )
+#    CACHES = {
+#        'default': {
+#            'BACKEND': 'django.core.cache.backends.filebased.FileBasedCache',
+#            'LOCATION': '/tmp/b2QPydaCgf6gP9GAfE4c',
+#        }
+#    }
     CACHES = {
         'default': {
             'BACKEND': 'django.core.cache.backends.dummy.DummyCache',

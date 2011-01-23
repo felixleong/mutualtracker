@@ -25,12 +25,9 @@ h1, h2, h3, h4, h5, h6 { color: #811; }
 /**************************************/
 /*              HEADER                */
 /**************************************/
-#header h1 { font-size: 3em; }
-#header h1 a {
-    color: #c33;
-    text-decoration: none;
-}
-
+#header h1 { display: none; }
+#header a { text-decoration: none; }
+#header img { margin-top: 2em; }
 
 /**************************************/
 /*             NAVIGATION             */
