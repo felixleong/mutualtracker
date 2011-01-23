@@ -3,7 +3,7 @@ File: urls.py
 Author: Leong Seh Hui
 Description: Routing information for fund pages
 '''
-from django.conf.urls.defaults import *
+from django.conf.urls.defaults import patterns
 
 urlpatterns = patterns('mutualtracker.fundtracking.views',
     (r'^$', 'index'),

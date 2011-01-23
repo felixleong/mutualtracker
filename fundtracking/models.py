@@ -13,14 +13,14 @@ class Fund(models.Model):
     def latest_price(self):
         try:
             return self.price_set.all()[0]
-        except IndexError, exc:
+        except IndexError:
             return {}
 
     @property
     def latest_15_day_price_set(self):
         try:
             return self.price_set.all()[:15]
-        except IndexError, exc:
+        except IndexError:
             return Price.objects.none()
 
     def get_last_52_week_price_set_until(self, until_date):

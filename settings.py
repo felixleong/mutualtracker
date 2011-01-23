@@ -68,15 +68,16 @@ TEMPLATE_LOADERS = (
 )
 
 MIDDLEWARE_CLASSES = (
+    'django.middleware.cache.UpdateCacheMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.middleware.gzip.GZipMiddleware',
     'django.middleware.http.ConditionalGetMiddleware',
-    'django.middleware.cache.CacheMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.contrib.flatpages.middleware.FlatpageFallbackMiddleware',
+    'django.middleware.cache.FetchFromCacheMiddleware',
 
     # Custom middleware
     'debug_toolbar.middleware.DebugToolbarMiddleware',
@@ -112,6 +113,13 @@ INSTALLED_APPS = (
 # Additional setting from other apps
 GOOGLE_ANALYTICS_MODEL = True
 
+CACHES = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.dummy.FileBasedCache',
+        'LOCATION': '/tmp/b2QPydaCgf6gP9GAfE4c',
+    }
+}
+
 # Settings for my own development environment
 if DEBUG:
     DATABASES = {
@@ -133,3 +141,8 @@ if DEBUG:
     TEMPLATE_DIRS = (
         '/Users/felix/Projects/mutualtracker/templates',
     )
+    CACHES = {
+        'default': {
+            'BACKEND': 'django.core.cache.backends.dummy.DummyCache',
+        }
+    }

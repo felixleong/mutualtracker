@@ -1,4 +1,4 @@
-from django.conf.urls.defaults import *
+from django.conf.urls.defaults import include, patterns, url
 from django.conf import settings
 
 # Enable the admin site
