@@ -30,6 +30,11 @@ class Fund(models.Model):
     def get_last_52_week_min_max_price_until(self, until_date):
         return self.get_last_52_week_price_set_until(until_date).aggregate(models.Min('nav'), models.Max('nav'))
 
+    @models.permalink
+    def get_absolute_url(self):
+        return ('mutualtracker.fundtracking.views.view', (), {'fund_id': str(self.id), })
+
+
 class Price(models.Model):
     class Meta:
         db_table = 'prices'

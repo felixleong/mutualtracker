@@ -96,6 +96,7 @@ INSTALLED_APPS = (
     'django.contrib.sites',
     'django.contrib.messages',
     'django.contrib.flatpages',
+    'django.contrib.sitemaps',
 
     # Admin pages
     'django.contrib.admin',
