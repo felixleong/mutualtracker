@@ -1,10 +1,11 @@
-from django.conf.urls.defaults import include, patterns, url
+from django.conf.urls.defaults import handler404, include, patterns, url
 from django.conf import settings
 
 # Enable the admin site
 from django.contrib import admin
 admin.autodiscover()
 
+handler404 # Dummy, just to keep pylint happy :)
 handler500 = 'mutualtracker.views.server_error'
 
 urlpatterns = patterns('',
