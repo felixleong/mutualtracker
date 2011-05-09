@@ -13,7 +13,7 @@ class Command(NoArgsCommand):
             if downloader.login():
                 self.stdout.write('Logged in\n')
 
-                for fund in Fund.objects.all():
+                for fund in Fund.objects.all()[32:]:
                     # The report code in PBMutual Online has no spaces, hence we need to remove them
                     self.stdout.write('Handling {0}...'.format(fund.code))
                     fund_code = str(fund.code).translate(None, ' ')

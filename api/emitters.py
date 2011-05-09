@@ -1,5 +1,4 @@
 from django.utils.encoding import smart_unicode
-from django.utils.xmlutils import SimplerXMLGenerator
 from piston import emitters
 from piston.utils import Mimer
 

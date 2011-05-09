@@ -1,6 +1,5 @@
 from datetime import datetime
 import logging
-import os
 import re
 import urllib
 import urllib2
@@ -139,7 +138,7 @@ class PBMutualReportDownloader():
     def logout(self):
         """Logs out from the PB Mutual Tracker site."""
         self._logger.info('Logging out from Public Mutual Online')
-        response = self._openUrl(self._getUrl('Logout'))
+        self._openUrl(self._getUrl('Logout'))
 
     def _getUrl(self, page):
         """Returns the full URL based on the page alias specified in PAGES."""

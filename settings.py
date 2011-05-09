@@ -96,6 +96,7 @@ INSTALLED_APPS = (
     'django.contrib.sites',
     'django.contrib.messages',
     'django.contrib.flatpages',
+    'django.contrib.markup',
     'django.contrib.sitemaps',
 
     # Admin pages
@@ -117,7 +118,7 @@ GOOGLE_ANALYTICS_MODEL = True
 CACHES = {
     'default': {
         'BACKEND': 'django.core.cache.backends.filebased.FileBasedCache',
-        'LOCATION': '/tmp/b2QPydaCgf6gP9GAfE4c',
+        'LOCATION': '/home/p375r083/tmp/mtdjango/',
     }
 }
 

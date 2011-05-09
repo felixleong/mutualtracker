@@ -10,9 +10,15 @@ class FundHandler(BaseHandler):
     """API handling class for funds"""
     model = Fund
     allowed_methods = ('GET',)
-    fields = ('id', 'code', 'name',)
+    fields = ('id', 'code', 'name', 'prices', ('date', 'nav'))
 
-    def read(self, request, fund_id=None, fund_code=None):
+    def read(self, request, action=None, fund_id=None, fund_code=None):
+        if action == 'list_prices':
+            return self.list_prices(request, fund_id, fund_code)
+        else:
+            return self.get(fund_id, fund_code)
+
+    def get(self, fund_id=None, fund_code=None):
         base = Fund.objects
         if fund_id:
             return base.get(pk=fund_id)
@@ -21,21 +27,7 @@ class FundHandler(BaseHandler):
         else:
             return base.all()
 
-class PriceHandler(BaseHandler):
-    model = Price
-    allowed_methods = ('GET',)
-    fields = ('id', 'date', 'nav', 'fund', )
-
-    def read(self, request, action=None, fund_id=None, fund_code=None):
-        if action == 'history':
-            return self.history(request, fund_id, fund_code)
-        else:
-            return self.list()
-
-    def list(self):
-        return Price.objects.all()[:20]
-
-    def history(self, request, fund_id=None, fund_code=None):
+    def list_prices(self, request, fund_id=None, fund_code=None):
         # GET parameters
         since_str = request.GET.get('since', '')
         until_str = request.GET.get('until', '')
@@ -78,3 +70,11 @@ class PriceHandler(BaseHandler):
         # Return the data to the user
         return base.all()[:count]
 
+
+class PriceHandler(BaseHandler):
+    model = Price
+    allowed_methods = ('GET',)
+    fields = ('id', 'date', 'nav', 'fund', )
+
+    def read(self, request):
+        return Price.objects.all()[:20]
