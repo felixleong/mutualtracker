@@ -47,7 +47,7 @@ class Command(NoArgsCommand):
             try:
                 fund = Fund.objects.get(code=code)
             except Fund.DoesNotExist:
-                self.stdout.write('## Create new fund: {0}'.format(code))
+                self.stdout.write('## Create new fund: {0}\n'.format(code))
                 fund = Fund(code=code, name=name)
                 fund.save()
 
@@ -57,6 +57,6 @@ class Command(NoArgsCommand):
                 if price_entry.nav != nav:
                     raise CommandError('NAV mismatch for fund %s', fund.code)
             except Price.DoesNotExist:
-                self.stdout.write('## Adding price: {0} - {1}'.format(code, nav))
+                self.stdout.write('## Adding price: {0} - {1}\n'.format(code, nav))
                 price_entry = Price(fund=fund, date=update_date, nav=nav)
                 price_entry.save()
