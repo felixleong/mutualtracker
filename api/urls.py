@@ -15,8 +15,8 @@ price_handler = Resource(PriceHandler)
 
 urlpatterns = patterns('',
     (r'funds\.(?P<emitter_format>.+)', fund_handler),
-    (r'funds/((?P<fund_id>\d+)|(?P<fund_code>[a-zA-Z ]+))\.(?P<emitter_format>.+)', fund_handler),
-    (r'funds/((?P<fund_id>\d+)|(?P<fund_code>[a-zA-Z ]+))/prices\.(?P<emitter_format>.+)', price_handler, {'action': 'list_prices'}),
+    (r'funds/((?P<fund_id>\d+)|(?P<fund_code>[a-zA-Z][a-zA-Z0-9 ]+))\.(?P<emitter_format>.+)', fund_handler),
+    (r'funds/((?P<fund_id>\d+)|(?P<fund_code>[a-zA-Z][a-zA-Z0-9 ]+))/prices\.(?P<emitter_format>.+)', price_handler, {'action': 'list_prices'}),
 
     (r'prices\.(?P<emitter_format>.+)', price_handler),
     
