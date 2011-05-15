@@ -11,12 +11,12 @@ MANAGERS = ADMINS
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'p375r083_pbtrack',
-        'USER': 'p375r083_pbtrack',
-        'PASSWORD': 'mL#7:O>',
-        'HOST': '',
-        'PORT': '',
+        'ENGINE': 'django.db.backends.mysql', # Add 'postgresql_psycopg2', 'postgresql', 'mysql', 'sqlite3' or 'oracle'.
+        'NAME': 'felix_pbtrack',                      # Or path to database file if using sqlite3.
+        'USER': 'felix',                      # Not used with sqlite3.
+        'PASSWORD': 'mL#7:O>',                  # Not used with sqlite3.
+        'HOST': '',                      # Set to empty string for localhost. Not used with sqlite3.
+        'PORT': '',                      # Set to empty string for default. Not used with sqlite3.
     }
 }
 
@@ -45,12 +45,12 @@ USE_L10N = True
 
 # Absolute path to the directory that holds media.
 # Example: "/home/media/media.lawrence.com/"
-MEDIA_ROOT = '/home/p375r083/mutualtracker/static/'
+MEDIA_ROOT = '/Users/felix/Projects/MutualTracker/static'
 
 # URL that handles the media served from MEDIA_ROOT. Make sure to use a
 # trailing slash if there is a path component (optional in other cases).
 # Examples: "http://media.lawrence.com", "http://example.com/media/"
-MEDIA_URL = 'http://media.mutualtracker.com/'
+MEDIA_URL = 'http://felixleong.loc:8000/site_media/'
 
 # URL prefix for admin media -- CSS, JavaScript and images. Make sure to use a
 # trailing slash.
@@ -117,40 +117,11 @@ GOOGLE_ANALYTICS_MODEL = True
 
 CACHES = {
     'default': {
-        'BACKEND': 'django.core.cache.backends.filebased.FileBasedCache',
-        'LOCATION': '/home/p375r083/tmp/mtdjango/',
+        'BACKEND': 'django.core.cache.backends.dummy.DummyCache',
     }
 }
 
-# Settings for my own development environment
-if DEBUG:
-    DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.mysql', # Add 'postgresql_psycopg2', 'postgresql', 'mysql', 'sqlite3' or 'oracle'.
-            'NAME': 'felix_pbtrack',                      # Or path to database file if using sqlite3.
-            'USER': 'felix',                      # Not used with sqlite3.
-            'PASSWORD': 'mL#7:O>',                  # Not used with sqlite3.
-            'HOST': '',                      # Set to empty string for localhost. Not used with sqlite3.
-            'PORT': '',                      # Set to empty string for default. Not used with sqlite3.
-        }
-    }
-    INTERNAL_IPS = (
-        '192.168.0.*',
-        '127.0.0.1',
-    )
-    MEDIA_URL = 'http://felixleong.loc:8000/site_media/'
-    MEDIA_ROOT = '/Users/felix/Projects/MutualTracker/static'
-    TEMPLATE_DIRS = (
-        '/Users/felix/Projects/mutualtracker/templates',
-    )
-#    CACHES = {
-#        'default': {
-#            'BACKEND': 'django.core.cache.backends.filebased.FileBasedCache',
-#            'LOCATION': '/tmp/b2QPydaCgf6gP9GAfE4c',
-#        }
-#    }
-    CACHES = {
-        'default': {
-            'BACKEND': 'django.core.cache.backends.dummy.DummyCache',
-        }
-    }
+INTERNAL_IPS = (
+    '192.168.0.*',
+    '127.0.0.1',
+)
