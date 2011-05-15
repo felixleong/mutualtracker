@@ -10,7 +10,7 @@ class FundHandler(BaseHandler):
     """API handling class for funds"""
     model = Fund
     allowed_methods = ('GET',)
-    fields = ('id', 'code', 'name', 'prices', ('date', 'nav'))
+#    fields = ('id', 'code', 'name', 'prices', ('date', 'nav'))
 
     def read(self, request, action=None, fund_id=None, fund_code=None):
         if action == 'list_prices':
