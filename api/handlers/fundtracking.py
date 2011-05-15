@@ -10,15 +10,12 @@ class FundHandler(BaseHandler):
     """API handling class for funds"""
     model = Fund
     allowed_methods = ('GET',)
-#    fields = ('id', 'code', 'name', 'prices', ('date', 'nav'))
+    fields = ('id', 'code', 'name',)
 
     def read(self, request, action=None, fund_id=None, fund_code=None):
-        if action == 'list_prices':
-            return self.list_prices(request, fund_id, fund_code)
-        else:
-            return self.get(fund_id, fund_code)
+        return self._get(fund_id, fund_code)
 
-    def get(self, fund_id=None, fund_code=None):
+    def _get(self, fund_id=None, fund_code=None):
         base = Fund.objects
         if fund_id:
             return base.get(pk=fund_id)
@@ -27,7 +24,23 @@ class FundHandler(BaseHandler):
         else:
             return base.all()
 
-    def list_prices(self, request, fund_id=None, fund_code=None):
+
+
+class PriceHandler(BaseHandler):
+    model = Price
+    allowed_methods = ('GET',)
+    fields = ('id', 'date', 'nav', 'fund', )
+
+    def read(self, request, action=None, fund_id=None, fund_code=None):
+        if action == 'list_prices':
+            return self._list_prices(request, fund_id, fund_code)
+        else:
+            return self._get(fund_id, fund_code)
+
+    def _get(self, request):
+        return Price.objects.all()[:20]
+
+    def _list_prices(self, request, fund_id=None, fund_code=None):
         # GET parameters
         since_str = request.GET.get('since', '')
         until_str = request.GET.get('until', '')
@@ -69,12 +82,3 @@ class FundHandler(BaseHandler):
 
         # Return the data to the user
         return base.all()[:count]
-
-
-class PriceHandler(BaseHandler):
-    model = Price
-    allowed_methods = ('GET',)
-    fields = ('id', 'date', 'nav', 'fund', )
-
-    def read(self, request):
-        return Price.objects.all()[:20]
