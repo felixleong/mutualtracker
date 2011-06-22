@@ -7,7 +7,6 @@ from BeautifulSoup import BeautifulSoup, SoupStrainer
 from django.core.files.base import ContentFile
 from mutualtracker.reporttracking.models import Report
 
-
 class ReportData():
     """Metadata of the report row"""
     date = None
@@ -104,7 +103,7 @@ class PBMutualReportDownloader():
     def getReport(self, fund_code, row_index):
         """Download the fund's report, referenced by the row index of the
         report entry and returns the filename.
-        
+
         Keyword arguments:
         fund_code -- Fund code
         row_index -- The report row index
@@ -119,21 +118,26 @@ class PBMutualReportDownloader():
         }
         response = self._openUrl(self._getUrl('ReportDownload'), params)
         self._logger.debug('### Response headers: %s', response.info())
-        content_disposition = response.info()['Content-Disposition']
-        filename_match = self.PDF_CONTENT_DISP_RE.search(content_disposition)
 
-        if filename_match:
-            filename = filename_match.group('filename')
-            self._logger.info('Downloading report: %s', filename)
-            file_content = response.read()
+        if 'Content-Disposition' in response.info():
+            content_disposition = response.info()['Content-Disposition']
+            filename_match = self.PDF_CONTENT_DISP_RE.search(content_disposition)
 
-            return {
-                'filename': filename,
-                'file_content': ContentFile(file_content),
-            }
+            if filename_match:
+                filename = filename_match.group('filename')
+                self._logger.info('Downloading report: %s', filename)
+                file_content = response.read()
+
+                return {
+                    'filename': filename,
+                    'file_content': ContentFile(file_content),
+                }
+            else:
+                self._logger.error('Cannot detect filename, content-disposition=%s', content_disposition)
+                return {}
         else:
-            self._logger.error('Cannot detect filename, content-disposition=%s', content_disposition)
-            return {}
+                self._logger.error('File cannot be found')
+                return {}
 
     def logout(self):
         """Logs out from the PB Mutual Tracker site."""
@@ -173,7 +177,7 @@ class PBMutualReportDownloader():
 
     def _openUrl(self, url, post_param=None, referer=''):
         """Opens URL and returns the page content.
-        
+
         Keyword arguments:
         url -- The URL to be accessed.
         post_param -- The POST parameters to be submitted to the page.
