@@ -63,7 +63,7 @@ class PriceHandler(BaseHandler):
                 count = 200
         except ValueError, e:
             resp = rc.BAD_REQUEST
-            resp.write(e)
+            resp.write(' ' + e.message)
             return resp
 
         # Retrieve the fund details
