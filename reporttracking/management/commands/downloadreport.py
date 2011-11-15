@@ -34,28 +34,36 @@ class Command(NoArgsCommand):
                         if not Report.objects.filter(
                                 fund__code=fund.code, date=report_meta.date,
                                 type=report_meta.type).exists():
-                            self.stdout.write(
-                                '!! Downloading report: date={0}\n'.format(
-                                    report_meta.date))
-                            report_file = downloader.getReport(
-                                    fund.code, index)
-                            self.stdout.write('!! Download completed!\n')
-                            if not report_file:
-                                raise CommandError(
-                                    "Couldn't download the file for fund %s, %s",
-                                    fund.code,
-                                    report_meta.date.strftime('%Y-%m-%d'))
+                            if fund.code == 'PI INCOME':
+                                self.stdout.write(
+                                        '(EE) Please download report manually: '
+                                        'code={0}, date={1}'.format(
+                                            fund.code,
+                                            report_meta.date.strftime('%Y-%m-%d')))
+                            else:
+                                self.stdout.write(
+                                    '!! Downloading report: date={0}\n'.format(
+                                        report_meta.date))
+                                report_file = downloader.getReport(
+                                        fund.code, index)
+                                self.stdout.write('!! Download completed!\n')
+                                if not report_file:
+                                    raise CommandError(
+                                        "Couldn't download the file for fund "
+                                        "{0}, {1}".format(
+                                            fund.code,
+                                            report_meta.date.strftime('%Y-%m-%d')))
 
-                             # Save the report
-                            report = Report()
-                            report.fund = fund
-                            report.date = report_meta.date
-                            report.type = report_meta.type
-                            report.state = 1 # Downloaded
-                            report.file_name.save(
-                                report_file['filename'],
-                                report_file['file_content'])
-                            report.save()
+                                # Save the report
+                                report = Report()
+                                report.fund = fund
+                                report.date = report_meta.date
+                                report.type = report_meta.type
+                                report.state = 1 # Downloaded
+                                report.file_name.save(
+                                    report_file['filename'],
+                                    report_file['file_content'])
+                                report.save()
                         else:
                             self.stdout.write(
                                 '## Skipped report: date={0}\n'.format(
