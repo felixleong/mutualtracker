@@ -4,8 +4,10 @@ import re
 import urllib
 import urllib2
 from BeautifulSoup import BeautifulSoup, SoupStrainer
+from django.conf import settings
 from django.core.files.base import ContentFile
 from mutualtracker.reporttracking.models import Report
+
 
 class ReportData():
     """Metadata of the report row"""
@@ -22,21 +24,21 @@ class ReportData():
 class PBMutualReportDownloader():
     """Report downloader for Public Mutual"""
     # Constants
-    PBMUTUAL_URL='https://www.publicmutualonline.com.my'
-    USER_AGENT='Mozilla/5.0 (Macintosh; U; Intel Mac OS X 10.6; en-US; rv:1.9.2.10) Gecko/20100914 Firefox/3.6.10'
-    PAGES={
+    PBMUTUAL_URL = 'https://www.publicmutualonline.com.my'
+    USER_AGENT = (
+        'Mozilla/5.0 (Macintosh; U; Intel Mac OS X 10.6; en-US; rv:1.9.2.10) '
+        'Gecko/20100914 Firefox/3.6.10')
+    PAGES = {
         'Home': 'Default.aspx',
         'Login': 'PMBLogin.aspx',
         'Logout': 'Logout.aspx',
         'SecurityLogout': 'SecurityLogout.aspx',
         'ReportDownload': 'EReportDownload.aspx',
     }
-    PBMUTUAL_USERNAME='FELIXLEONG'
-    PBMUTUAL_PASSWORD='R84rtiNMS'
     PDF_CONTENT_DISP_RE = re.compile(r'filename=(?P<filename>.+\.(pdf|PDF))')
     LISTING_STRAINER = SoupStrainer('table', id='gvwEReport')
 
-    HTTP_DEBUG_LEVEL=False
+    HTTP_DEBUG_LEVEL = False
 
     # Class methods
     def __init__(self):
@@ -45,16 +47,18 @@ class PBMutualReportDownloader():
 
         # Setup our URL opener
         opener = urllib2.build_opener(
-                urllib2.HTTPHandler(debuglevel=self.HTTP_DEBUG_LEVEL),
-                urllib2.HTTPSHandler(debuglevel=self.HTTP_DEBUG_LEVEL),
-                urllib2.HTTPCookieProcessor())
+            urllib2.HTTPHandler(debuglevel=self.HTTP_DEBUG_LEVEL),
+            urllib2.HTTPSHandler(debuglevel=self.HTTP_DEBUG_LEVEL),
+            urllib2.HTTPCookieProcessor())
         urllib2.install_opener(opener)
 
         # Retrieve our ViewState before doing anything
         response = urllib2.urlopen(self._getUrl('Login'))
         self._last_view_state = self._getViewState(response.read())
 
-    def login(self, username=PBMUTUAL_USERNAME, password=PBMUTUAL_PASSWORD):
+    def login(
+            self, username=settings.PBMUTUAL_USERNAME,
+            password=settings.PBMUTUAL_PASSWORD):
         """Perform a login in the PB Mutual Online system and returns True if
         successful."""
         self._logger.info('Logging into Public Mutual Online')
@@ -67,13 +71,16 @@ class PBMutualReportDownloader():
         response = self._openUrl(self._getUrl('Login'), params)
 
         if response.geturl() != self._getUrl('Home'):
-            self._logger.error('Failed to login, received page: %s', response.geturl())
+            self._logger.error(
+                'Failed to login, received page: %s', response.geturl())
             return False
         else:
             return True
 
     def getReportListing(self, fund_code):
-        """Retrieves fund listing based on fund code provided and returns a list."""
+        """
+        Retrieves fund listing based on fund code provided and returns a list.
+        """
         self._logger.info('Retrieving report listing of %s' % (fund_code,))
 
         response = self._openUrl(self._getUrl('ReportDownload'))
@@ -92,7 +99,9 @@ class PBMutualReportDownloader():
         response_html = response.read()
 
         if response.geturl() != self._getUrl('ReportDownload'):
-            self._logger.error('Failed to retrieve listing, received page: %s', response.geturl())
+            self._logger.error(
+                'Failed to retrieve listing, received page: %s',
+                response.geturl())
             return []
         else:
             self._logger.debug('### Report listing:\n%s', response_html)
@@ -101,14 +110,16 @@ class PBMutualReportDownloader():
             return self._parseReportListing(response_html)
 
     def getReport(self, fund_code, row_index):
-        """Download the fund's report, referenced by the row index of the
+        """
+        Download the fund's report, referenced by the row index of the
         report entry and returns the filename.
 
         Keyword arguments:
         fund_code -- Fund code
         row_index -- The report row index
         """
-        self._logger.info('Downloading report for fund %s: index %d', fund_code, row_index)
+        self._logger.info(
+            'Downloading report for fund %s: index %d', fund_code, row_index)
         params = {
             '__VIEWSTATE': self._last_view_state,
             '__VIEWSTATEENCRYPTED': '',
@@ -121,7 +132,8 @@ class PBMutualReportDownloader():
 
         if 'Content-Disposition' in response.info():
             content_disposition = response.info()['Content-Disposition']
-            filename_match = self.PDF_CONTENT_DISP_RE.search(content_disposition)
+            filename_match = self.PDF_CONTENT_DISP_RE.search(
+                content_disposition)
 
             if filename_match:
                 filename = filename_match.group('filename')
@@ -133,7 +145,9 @@ class PBMutualReportDownloader():
                     'file_content': ContentFile(file_content),
                 }
             else:
-                self._logger.error('Cannot detect filename, content-disposition=%s', content_disposition)
+                self._logger.error(
+                    'Cannot detect filename, content-disposition=%s',
+                    content_disposition)
                 return {}
         else:
                 self._logger.error('File cannot be found')
@@ -154,12 +168,18 @@ class PBMutualReportDownloader():
         return soup.find(id='__VIEWSTATE')['value']
 
     def _parseReportListing(self, report_listing_html):
-        """Parse the report listing page and returns a list of downloadable reports."""
-        table = BeautifulSoup(report_listing_html, parseOnlyThese=self.LISTING_STRAINER)
+        """
+        Parse the report listing page and returns a list of downloadable
+        reports.
+        """
+        table = BeautifulSoup(
+            report_listing_html, parseOnlyThese=self.LISTING_STRAINER)
 
         listing = []
         for row in table.findAll('tr')[1:]:
-            report_meta = [ ''.join(td.findAll(text=True)).strip() for td in row.findAll('td') ]
+            report_meta = [
+                ''.join(td.findAll(text=True)).strip()
+                for td in row.findAll('td')]
 
             # Parse the data text
             report_data = ReportData()
@@ -195,4 +215,3 @@ class PBMutualReportDownloader():
             request.add_header('Referer', url)
 
         return urllib2.urlopen(request)
-

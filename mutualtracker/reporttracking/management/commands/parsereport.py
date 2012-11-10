@@ -1,16 +1,17 @@
-import logging
 import os.path
 import subprocess
-import unicodedata
 from django.core.management.base import BaseCommand, CommandError
 from optparse import make_option
-from mutualtracker.reporttracking.models import Report, Country, Industry, Company, Holding
+from mutualtracker.reporttracking.models import (
+    Report, Country, Industry, Company, Holding)
 from parser import PbMutualAnnualReportParser, datachecker
 from parser.base import LineData, LineType
 
+
 class Command(BaseCommand):
     option_list = BaseCommand.option_list + (
-        make_option('--commit',
+        make_option(
+            '--commit',
             action='store_true',
             dest='commit',
             default=False,
@@ -21,11 +22,12 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
 #        logging.basicConfig(level=logging.DEBUG)
-        commit=options['commit']
+        commit = options['commit']
 
         # Filter only annual reports that are downloaded but not yet parsed
         for report in Report.objects.filter(type=1, state=1):
-            self.stdout.write('## Parsing ID#{0}: {1} - {2}: {3}\n'.format(report.pk, report.fund, report.date, report.file_name.path))
+            self.stdout.write('## Parsing ID#{0}: {1} - {2}: {3}\n'.format(
+                report.pk, report.fund, report.date, report.file_name.path))
             text_filename = self._convertPdfToTextFile(report.file_name.path)
 
             with open(text_filename, 'r') as textfile:
@@ -34,12 +36,16 @@ class Command(BaseCommand):
                     datachecker.check(data)
                     self._commitData(data, report, commit)
                 except Exception, exc:
-                    raise CommandError('Data checking failed, last line:\n{0}'.format(exc))
+                    raise CommandError(
+                        'Data checking failed, last line:\n{0}'.format(exc))
 
                 self.stdout.write('\n')
 
     def _convertPdfToTextFile(self, filename):
-        '''Converts PDF file to a text file and returns the filename of the text file.'''
+        '''
+        Converts PDF file to a text file and returns the filename of the text
+        file.
+        '''
         try:
             if not os.path.isfile(filename):
                 raise CommandError('Cannot find report - {0}'.format(filename))
@@ -51,13 +57,15 @@ class Command(BaseCommand):
                 return text_filename
 
             # Perform the conversion
-            subprocess.check_call(['pdftotext', '-raw', filename, text_filename])
+            subprocess.check_call(
+                ['pdftotext', '-raw', filename, text_filename])
             if not os.path.isfile(text_filename):
                 raise CommandError('Cannot find the text output')
 
             return text_filename
         except subprocess.CalledProcessError, exc:
-            raise CommandError('pdftotext failed, returned {0}'.format(exc.returncode))
+            raise CommandError(
+                'pdftotext failed, returned {0}'.format(exc.returncode))
 
     def _commitData(self, data, report, commit=False):
         '''Commit the parsed data into the database'''
@@ -68,24 +76,34 @@ class Command(BaseCommand):
                 continue
 
             if prev_line.security_type != line.security_type:
-                pass # Does nothing at the moment; we still don't track such info yet
+                # Does nothing at the moment; we still don't track such info
+                # yet
+                pass
             if prev_line.country != line.country:
                 current_country = self._getCountry(line.country, commit)
             if prev_line.industry != line.industry:
-                current_industries = [ self._getIndustry(x.strip(), commit) for x in line.industry.split('/') ]
+                current_industries = [
+                    self._getIndustry(x.strip(), commit)
+                    for x in line.industry.split('/')]
 
             # Get the company
             try:
-                company = Company.objects.get(name=line.name, country=current_country)
+                company = Company.objects.get(
+                    name=line.name, country=current_country)
             except Company.DoesNotExist:
-                self.stdout.write(' +-- (!!) Create company: [{1}] {0}\n'.format(line.name, current_country.name))
-                self.stdout.write('      * with industries: {0}\n'.format(','.join([ x.name for x in current_industries ])))
+                self.stdout.write(
+                    ' +-- (!!) Create company: [{1}] {0}\n'.format(
+                        line.name, current_country.name))
+                self.stdout.write(
+                    '      * with industries: {0}\n'.format(
+                        ','.join([x.name for x in current_industries])))
                 company = Company(name=line.name, country=current_country)
                 if commit:
                     company.save()
 
             if commit:
-                # Attach any potential new industries to the company, just in case
+                # Attach any potential new industries to the company, just in
+                # case
                 for industry in current_industries:
                     company.industries.add(industry)
                 company.save()
@@ -95,7 +113,8 @@ class Command(BaseCommand):
                     company_industries = company.industries.all()
                     for industry in current_industries:
                         if industry not in company_industries:
-                            self.stdout.write('      * new industry association: {0}\n'.format(industry.name))
+                            self.stdout.write(
+                                '      * new industry association: {0}\n'.format(industry.name))
 
             # Once we had the company, add it to the holdings of the report
             self._addHoldingToReport(report, company, line, commit)
@@ -104,19 +123,22 @@ class Command(BaseCommand):
             prev_line = line
 
         # Update the parsing status
-        report.state = 2 # Parsed
+        report.state = 2  # Parsed
         if commit:
             report.save()
 
     def _addHoldingToReport(self, report, company, line, commit):
-        '''Associate fund holding data in report and adding it into the database.'''
+        '''
+        Associate fund holding data in report and adding it into the database.
+        '''
         if not commit:
-            self.stdout.write(' +-- Add holding: [{1}] {0} = {2} {3} {4} {5}\n'.format(
-                company.name, company.country.name,
-                line.quantity,
-                line.cost,
-                line.market_value,
-                line.nav_percentage))
+            self.stdout.write(
+                ' +-- Add holding: [{1}] {0} = {2} {3} {4} {5}\n'.format(
+                    company.name, company.country.name,
+                    line.quantity,
+                    line.cost,
+                    line.market_value,
+                    line.nav_percentage))
             return
 
         try:
@@ -142,7 +164,10 @@ class Command(BaseCommand):
             holding.save()
 
     def _getCountry(self, name, commit):
-        '''Gets the company model object; creates a new object if it does not exists.'''
+        '''
+        Gets the company model object; creates a new object if it does not
+        exists.
+        '''
         try:
             current_country = Country.objects.get(name=name)
         except Country.DoesNotExist:
@@ -154,7 +179,10 @@ class Command(BaseCommand):
             return current_country
 
     def _getIndustry(self, name, commit):
-        '''Gets the industry model object; creates a new object if it does not exists.'''
+        '''
+        Gets the industry model object; creates a new object if it does not
+        exists.
+        '''
         try:
             industry = Industry.objects.get(name=name)
         except Industry.DoesNotExist:
@@ -164,4 +192,3 @@ class Command(BaseCommand):
                 industry.save()
         finally:
             return industry
-

@@ -24,7 +24,7 @@ sitemaps = {
 
 urlpatterns = patterns(
     '',
-    url(r'^$', 'mutualtracker.fundtracking.views.index', name='root'),
+    url(r'^$', 'mutualtracker.fundtracking.views.index', name='home'),
     url(r'^funds/', include('mutualtracker.fundtracking.urls')),
     url(r'^api/', include('mutualtracker.api.urls')),
     url(r'^sitemap\.xml$', 'django.contrib.sitemaps.views.sitemap',
@@ -33,6 +33,9 @@ urlpatterns = patterns(
     # Admin site
     url(r'^admin/', include(admin.site.urls)),
     url(r'^admin/doc/', include('django.contrib.admindocs.urls')),
+
+    # Mezzaine - reserve for last
+    url("^blog/", include("mezzanine.urls")),
 )
 
 # DEBUG: Settings that are only to be used in development environments

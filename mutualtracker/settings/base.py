@@ -40,40 +40,59 @@ STATICFILES_FINDERS = (
 SECRET_KEY = 'hc-$fqj=%$rfxsexyo3w08b-41d=vry^nkq3wu(wc8@6kg%n+@'
 
 # List of callables that know how to import templates from various sources.
+TEMPLATE_CONTEXT_PROCESSORS = (
+    "django.contrib.auth.context_processors.auth",
+    "django.contrib.messages.context_processors.messages",
+    "django.core.context_processors.debug",
+    "django.core.context_processors.i18n",
+    "django.core.context_processors.static",
+    "django.core.context_processors.media",
+    "django.core.context_processors.request",
+    "django.core.context_processors.tz",
+    "mezzanine.conf.context_processors.settings",
+)
+
 TEMPLATE_LOADERS = (
     'django.template.loaders.filesystem.Loader',
     'django.template.loaders.app_directories.Loader',
 )
 
 TEMPLATE_DIRS = (
-    op.join(_PROJ_DIR, '../templates/')
+    op.join(_PROJ_DIR, 'templates/')
 )
 
 MIDDLEWARE_CLASSES = (
     'django.middleware.cache.UpdateCacheMiddleware',
-    'django.middleware.common.CommonMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
-    'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
+    "django.contrib.redirects.middleware.RedirectFallbackMiddleware",
+    'django.middleware.common.CommonMiddleware',
+    'django.middleware.csrf.CsrfViewMiddleware',
     'django.middleware.gzip.GZipMiddleware',
     'django.middleware.http.ConditionalGetMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.contrib.flatpages.middleware.FlatpageFallbackMiddleware',
     'django.middleware.cache.FetchFromCacheMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    "mezzanine.core.request.CurrentRequestMiddleware",
+    "mezzanine.core.middleware.TemplateForDeviceMiddleware",
+    "mezzanine.core.middleware.TemplateForHostMiddleware",
+    "mezzanine.core.middleware.AdminLoginInterfaceSelectorMiddleware",
+    # Uncomment the following if using any of the SSL settings:
+    # "mezzanine.core.middleware.SSLRedirectMiddleware",
+    "mezzanine.pages.middleware.PageMiddleware",
+    "mezzanine.core.middleware.FetchFromCacheMiddleware",
 )
+
+# Store these package names here as they may change in the future since
+# at the moment we are using custom forks of them.
+PACKAGE_NAME_FILEBROWSER = "filebrowser_safe"
+PACKAGE_NAME_GRAPPELLI = "grappelli_safe"
 
 ROOT_URLCONF = 'mutualtracker.urls'
 
 # Python dotted path to the WSGI application used by Django's runserver.
 WSGI_APPLICATION = 'mutualtracker.wsgi.application'
-
-TEMPLATE_DIRS = (
-    # Put strings here, like "/home/html/django_templates" or "C:/www/django/templates".
-    # Always use forward slashes, even on Windows.
-    # Don't forget to use absolute paths, not relative paths.
-    op.join(_PROJ_DIR, 'templates/'),
-)
 
 INSTALLED_APPS = (
     'django.contrib.auth',
@@ -87,10 +106,21 @@ INSTALLED_APPS = (
     'django.contrib.sitemaps',
     'django.contrib.admin',
     'django.contrib.admindocs',
+    'django.contrib.redirects',
 
     'analytical',
     'south',
 
+    'mezzanine.boot',
+    'mezzanine.conf',
+    'mezzanine.core',
+    'mezzanine.generic',
+    'mezzanine.blog',
+    'mezzanine.forms',
+    'mezzanine.pages',
+    'mezzanine.galleries',
+
+    'mezzanine.twitter',
     # Lastly... my own apps
     'mutualtracker.fundtracking',
     'mutualtracker.reporttracking',

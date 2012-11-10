@@ -4,6 +4,7 @@ from downloader import PBMutualReportDownloader
 from mutualtracker.fundtracking.models import Fund
 from mutualtracker.reporttracking.models import Report
 
+
 class Command(NoArgsCommand):
     def handle_noargs(self, **options):
         downloader = None
@@ -36,30 +37,31 @@ class Command(NoArgsCommand):
                                 type=report_meta.type).exists():
                             if fund.code == 'PI INCOME':
                                 self.stdout.write(
-                                        '(EE) Please download report manually: '
-                                        'code={0}, date={1}'.format(
-                                            fund.code,
-                                            report_meta.date.strftime('%Y-%m-%d')))
+                                    '(EE) Please download report manually: '
+                                    'code={0}, date={1}'.format(
+                                        fund.code,
+                                        report_meta.date.strftime('%Y-%m-%d')))
                             else:
                                 self.stdout.write(
                                     '!! Downloading report: date={0}\n'.format(
                                         report_meta.date))
                                 report_file = downloader.getReport(
-                                        fund.code, index)
+                                    fund.code, index)
                                 self.stdout.write('!! Download completed!\n')
                                 if not report_file:
                                     raise CommandError(
                                         "Couldn't download the file for fund "
                                         "{0}, {1}".format(
                                             fund.code,
-                                            report_meta.date.strftime('%Y-%m-%d')))
+                                            report_meta.date.strftime(
+                                                '%Y-%m-%d')))
 
                                 # Save the report
                                 report = Report()
                                 report.fund = fund
                                 report.date = report_meta.date
                                 report.type = report_meta.type
-                                report.state = 1 # Downloaded
+                                report.state = 1  # Downloaded
                                 report.file_name.save(
                                     report_file['filename'],
                                     report_file['file_content'])
@@ -79,4 +81,3 @@ class Command(NoArgsCommand):
             if downloader:
                 downloader.logout()
                 self.stdout.write('Logged out\n')
-
