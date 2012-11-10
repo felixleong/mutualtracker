@@ -1,6 +1,4 @@
 \.pyc$
-bin
-include
-lib
-src
-static/Reports
+
+media/
+static/
