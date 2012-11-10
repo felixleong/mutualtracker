@@ -85,13 +85,11 @@ INSTALLED_APPS = (
     'django.contrib.flatpages',
     'django.contrib.markup',
     'django.contrib.sitemaps',
-
-    # Admin pages
     'django.contrib.admin',
     'django.contrib.admindocs',
 
-    # Custom apps
-    'google_analytics',
+    'analytical',
+    'south',
 
     # Lastly... my own apps
     'mutualtracker.fundtracking',
@@ -126,6 +124,3 @@ LOGGING = {
         },
     }
 }
-
-# Additional setting from other apps
-GOOGLE_ANALYTICS_MODEL = True

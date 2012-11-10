@@ -1,19 +1,21 @@
 {% extends 'base.html' %}
+{% load staticfiles %}
 
 {% block title %}{{ fund.name }}{% endblock %}
 
 {% block head_scripts %}
-<!--[if IE]><script src="{{ MEDIA_URL }}js/flot/excanvas.js" type="text/javascript" charset="utf-8"></script><![endif]-->
-<script src="{{ MEDIA_URL }}js/flot/jquery.min.js" type="text/javascript" charset="utf-8"></script>
-<script src="{{ MEDIA_URL }}js/flot/jquery.flot.min.js" type="text/javascript" charset="utf-8"></script>
-<script src="{{ MEDIA_URL }}js/flot/jquery.flot.crosshair.min.js" type="text/javascript" charset="utf-8"></script>
-<script src="{{ MEDIA_URL }}js/flot/jquery.flot.selection.min.js" type="text/javascript" charset="utf-8"></script>
-<script src="{{ MEDIA_URL }}js/jquery.dataTables.js" type="text/javascript" charset="utf-8"></script>
+<!--[if IE]><script src="{% static 'fundtracking/js/flot/excanvas.js' %}" type="text/javascript" charset="utf-8"></script><![endif]-->
+<script src="{% static 'fundtracking/js/flot/jquery.min.js' %}" type="text/javascript" charset="utf-8"></script>
+<script src="{% static 'fundtracking/js/flot/jquery.flot.min.js' %}" type="text/javascript" charset="utf-8"></script>
+<script src="{% static 'fundtracking/js/flot/jquery.flot.crosshair.min.js' %}" type="text/javascript" charset="utf-8"></script>
+<script src="{% static 'fundtracking/js/flot/jquery.flot.selection.min.js' %}" type="text/javascript" charset="utf-8"></script>
+<script src="{% static 'fundtracking/js/jquery.dataTables.js' %}" type="text/javascript" charset="utf-8"></script>
 
-<script src="{{ MEDIA_URL }}js/pbmutual.lib.js" type="text/javascript" charset="utf-8"></script>
-<script src="{{ MEDIA_URL }}js/pbmutual.constants{% if debug %}.debug{% endif %}.js" type="text/javascript" charset="utf-8"></script>
-
-<script src="{{ MEDIA_URL }}js/funds/view.js" type="text/javascript" charset="utf-8"></script>
+<script src="{% static 'fundtracking/js/pbmutual.lib.js' %}" type="text/javascript" charset="utf-8"></script>
+{% if not debug %}<script src="{% static 'fundtracking/js/pbmutual.constants.js' %}" type="text/javascript" charset="utf-8"></script>
+{% else %}<script src="{% static 'fundtracking/js/pbmutual.constants.debug.js' %}" type="text/javascript" charset="utf-8"></script>
+{% endif %}
+<script src="{% static 'fundtracking/js/funds/view.js' %}" type="text/javascript" charset="utf-8"></script>
 <script type="text/javascript" charset="utf-8">
   var chartData = [
 {% for price in fund.last_52_week_price_set %}[{{ price.date|date:'U' }}000, {{ price.nav|floatformat:4 }}]{% if not forloop.last %},{% endif %}{% endfor %}

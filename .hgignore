@@ -1,4 +1,6 @@
 \.pyc$
 
+mutualtracker/settings/local.py
+
 media/
 static/

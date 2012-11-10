@@ -1,17 +1,45 @@
-from django.conf.urls import patterns, include, url
+from django.conf.urls.defaults import handler404, include, patterns, url
+from django.contrib.sitemaps import FlatPageSitemap
+from django.conf import settings
+from mutualtracker.fundtracking.sitemaps import FundSitemap
+from mutualtracker.sitemaps import ViewsSitemap
 
-# Uncomment the next two lines to enable the admin:
-# from django.contrib import admin
-# admin.autodiscover()
+# Enable the admin site
+from django.contrib import admin
+admin.autodiscover()
 
-urlpatterns = patterns('',
-    # Examples:
-    # url(r'^$', 'mutualtracker.views.home', name='home'),
-    # url(r'^mutualtracker/', include('mutualtracker.foo.urls')),
+handler404  # Dummy, just to keep pylint happy :)
+handler500 = 'mutualtracker.errors.server_error'
 
-    # Uncomment the admin/doc line below to enable admin documentation:
-    # url(r'^admin/doc/', include('django.contrib.admindocs.urls')),
+sitemaps = {
+    'flatpages': FlatPageSitemap,
+    'funds': FundSitemap,
+    'views': ViewsSitemap(
+        (
+            'mutualtracker.fundtracking.views.index',
+        ),
+        priority=1.0, changefreq='daily'
+    ),
+}
 
-    # Uncomment the next line to enable the admin:
-    # url(r'^admin/', include(admin.site.urls)),
+urlpatterns = patterns(
+    '',
+    url(r'^$', 'mutualtracker.fundtracking.views.index', name='root'),
+    url(r'^funds/', include('mutualtracker.fundtracking.urls')),
+    url(r'^api/', include('mutualtracker.api.urls')),
+    url(r'^sitemap\.xml$', 'django.contrib.sitemaps.views.sitemap',
+        {'sitemaps': sitemaps}),
+
+    # Admin site
+    url(r'^admin/', include(admin.site.urls)),
+    url(r'^admin/doc/', include('django.contrib.admindocs.urls')),
 )
+
+# DEBUG: Settings that are only to be used in development environments
+if settings.DEBUG:
+    urlpatterns += patterns(
+        '',
+        url(r'^media/(?P<path>.*)$', 'django.views.static.serve',
+            {'document_root': settings.MEDIA_ROOT, 'show_indexes': True}),
+        url(r'^500/', 'mutualtracker.errors.server_error'),
+    )

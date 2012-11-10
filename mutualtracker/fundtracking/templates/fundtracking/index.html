@@ -1,19 +1,20 @@
 {% extends 'base.html' %}
+{% load staticfiles %}
 
 {% block title %}Latest Fund Prices{% endblock %}
 
 {% block head_scripts %}
-<!--[if IE]><script src="{{ MEDIA_URL }}js/flot/excanvas.js" type="text/javascript" charset="utf-8"></script><![endif]-->
-<script src="{{ MEDIA_URL }}js/flot/jquery.min.js" type="text/javascript" charset="utf-8"></script>
-<script src="{{ MEDIA_URL }}js/flot/jquery.flot.js" type="text/javascript" charset="utf-8"></script>
-<script src="{{ MEDIA_URL }}js/jquery.dataTables.js" type="text/javascript" charset="utf-8"></script>
-<script src="{{ MEDIA_URL }}js/funds/index.js" type="text/javascript" charset="utf-8"></script>
+<!--[if IE]><script src="{% static 'fundtracking/js/flot/excanvas.js' %}" type="text/javascript" charset="utf-8"></script><![endif]-->
+<script src="{% static 'fundtracking/js/flot/jquery.min.js' %}" type="text/javascript" charset="utf-8"></script>
+<script src="{% static 'fundtracking/js/flot/jquery.flot.js' %}" type="text/javascript" charset="utf-8"></script>
+<script src="{% static 'fundtracking/js/jquery.dataTables.js' %}" type="text/javascript" charset="utf-8"></script>
+<script src="{% static 'fundtracking/js/funds/index.js' %}" type="text/javascript" charset="utf-8"></script>
 <script type="text/javascript" charset="utf-8">
 var fundPrices = [
 {% for fund in fund_list %}
     [ {% for price in fund.latest_15_day_price_set %}[{{ forloop.revcounter }}, {{ price.nav }}]{% if not forloop.last %},{% endif %}{% endfor %} ]{% if not forloop.last %},{% endif %}
 {% endfor %}
-];    
+];
 </script>
 {% endblock %}
 
